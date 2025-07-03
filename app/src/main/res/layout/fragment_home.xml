@@ -1,22 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFF8E1"
+    android:padding="16dp"
+    android:clipToPadding="false"
     tools:context=".ui.home.HomeFragment">
 
-    <TextView
-        android:id="@+id/text_home"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:background="@drawable/rounded_all_corners"
+        android:elevation="4dp"
+        android:padding="24dp">
+
+        <!-- 🌊 Wave Decoration -->
+        <ImageView
+            android:id="@+id/waveTop"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginStart="-20dp"
+            android:layout_marginEnd="-20dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wave_yellow"
+            app:layout_constraintTop_toBottomOf="@+id/btnCancelProfileEdit"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/waveTop2"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginEnd="-20dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/wave_yellow2"
+            app:layout_constraintTop_toTopOf="@+id/waveTop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- 🍰 App Header -->
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="12dp"
+                android:src="@drawable/ic_wedding_cake" />
+
+            <TextView
+                android:layout_width="166dp"
+                android:layout_height="60dp"
+                android:fontFamily="@font/alex_brush"
+                android:text="@string/app_name"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="40sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- 🧍 Name Label -->
+        <TextView
+            android:id="@+id/labelName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            app:layout_constraintTop_toBottomOf="@+id/header"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="24dp" />
+
+        <!-- 🧍 Name Input -->
+        <EditText
+            android:id="@+id/txtUser"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:hint="@string/prompt_name"
+            android:inputType="textPersonName"
+            app:layout_constraintTop_toBottomOf="@+id/labelName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/userValidate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            app:layout_constraintTop_toBottomOf="@+id/txtUser"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- 📧 Email Label -->
+        <TextView
+            android:id="@+id/labelEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            app:layout_constraintTop_toBottomOf="@+id/userValidate"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="24dp" />
+
+        <!-- 📧 Email Input -->
+        <EditText
+            android:id="@+id/txtEmail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:hint="@string/prompt_email"
+            android:inputType="textEmailAddress"
+            app:layout_constraintTop_toBottomOf="@+id/labelEmail"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/emailValidate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            app:layout_constraintTop_toBottomOf="@+id/txtEmail"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- 💾 Save Button -->
+        <Button
+            android:id="@+id/btnSaveProfileEdit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:enabled="false"
+            android:text="@string/action_save_changes"
+            app:layout_constraintTop_toBottomOf="@+id/emailValidate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- ❌ Cancel Button -->
+        <Button
+            android:id="@+id/btnCancelProfileEdit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:alpha="0.7"
+            android:backgroundTint="?attr/colorControlHighlight"
+            android:text="@string/action_cancel"
+            app:layout_constraintTop_toBottomOf="@+id/btnSaveProfileEdit"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

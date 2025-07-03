@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "169791095970",
+    "firebase_url": "https://recipeapp-bfa4b-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "recipeapp-bfa4b",
+    "storage_bucket": "recipeapp-bfa4b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:169791095970:android:536b52781be9fa268103fb",
+        "android_client_info": {
+          "package_name": "com.example.recipeapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDsLlsikXzYdY69eF630TmXUpeTDx4OC8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:169791095970:android:22a42e7acffa70fc8103fb",
+        "android_client_info": {
+          "package_name": "com.example.recipeapp_joshuawongchenyen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDsLlsikXzYdY69eF630TmXUpeTDx4OC8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation2"
+    app:startDestination="@+id/navigation_menu">
+    <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="com.example.recipeapp.ui.notifications.NotificationsFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/navigation_menu"
+        android:name="com.example.recipeapp.ui.menu.MenuFragment"
+        android:label="@string/title_menu"
+        tools:layout="@layout/fragment_menu" >
+        <action
+            android:id="@+id/action_navigation_menu_to_fragmentAddRecipe"
+            app:destination="@id/fragmentAddRecipe" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.recipeapp.ui.home.HomeFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_menu"
+            app:destination="@id/navigation_menu" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentAddRecipe"
+        android:name="com.example.recipeapp.ui.menu.FragmentAddRecipe"
+        android:label="FragmentAddRecipe" >
+        <action
+            android:id="@+id/action_fragmentAddRecipe_to_navigation_menu"
+            app:destination="@id/navigation_menu" />
+    </fragment>
+</navigation>
