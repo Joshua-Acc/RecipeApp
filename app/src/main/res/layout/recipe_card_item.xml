@@ -1,0 +1,61 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_recipe_gradient"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/recipe_image"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_marginEnd="12dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_background"
+            android:background="@drawable/bg_image_rounded" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/recipe_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Spaghetti Carbonara"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/recipe_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pasta"
+                android:textSize="14sp"
+                android:textColor="#607D8B" />
+
+            <TextView
+                android:id="@+id/recipe_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Creamy pasta with egg, cheese, and bacon..."
+                android:textColor="#555555"
+                android:textSize="14sp"
+                android:maxLines="2"
+                android:ellipsize="end" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
