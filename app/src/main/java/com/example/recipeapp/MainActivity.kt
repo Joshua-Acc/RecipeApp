@@ -15,6 +15,8 @@ import com.example.recipeapp.databinding.ActivityMainBinding
 import com.example.recipeapp.ui.UiHelper.handleBackPressWithAuthCheck
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : AppCompatActivity() {
 
@@ -61,6 +63,12 @@ class MainActivity : AppCompatActivity() {
 
         // 🔙 Modern back press handling
         handleBackPressWithAuthCheck()
+
+//        FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
+//            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@addOnSuccessListener
+//            val userTokenRef = FirebaseDatabase.getInstance().getReference("users/$userId/fcmToken")
+//            userTokenRef.setValue(token)
+//        }
 
     }
 

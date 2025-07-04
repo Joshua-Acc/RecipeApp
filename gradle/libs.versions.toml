@@ -27,6 +27,7 @@ cardview = "1.0.0"
 runtimeAndroid = "1.8.3"
 uiUnitAndroid = "1.8.3"
 glide = "4.16.0"
+firebaseMessaging = "24.1.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +56,7 @@ androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime
 androidx-ui-unit-android = { group = "androidx.compose.ui", name = "ui-unit-android", version.ref = "uiUnitAndroid" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 glideCompiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 
 
 [plugins]

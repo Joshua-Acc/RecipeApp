@@ -4,7 +4,7 @@
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFF8E1"
+    android:background="#F0F0F0"
     android:padding="16dp">
 
     <Button
@@ -24,71 +24,192 @@
         android:textSize="12sp"
         tools:background="@android:color/darker_gray" />
 
-    <!-- Container with top-rounded corners -->
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
+        android:text="Add Recipe"
+        android:textSize="14sp" />
+
     <ScrollView
         android:id="@+id/formScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btnClose"
+        android:layout_above="@id/btnSubmit"
+        android:layout_below="@id/btnClose"
         android:layout_marginTop="8dp"
-        android:background="@drawable/rounded_top_corners"
+        android:layout_marginBottom="7dp"
         android:clipToPadding="false"
         android:elevation="4dp"
-        android:padding="24dp">
+        android:padding="8dp"
+        android:scrollbarSize="1dp">
 
         <LinearLayout
-            android:id="@+id/formContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/etTitle"
+            <!-- Image Preview -->
+            <ImageView
+                android:id="@+id/imagePreview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:hint="Recipe Title" />
-
-            <EditText
-                android:id="@+id/etDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:hint="Description" />
-
-            <Spinner
-                android:id="@+id/spinnerCategory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp" />
-
-            <EditText
-                android:id="@+id/etIngredients"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:hint="Ingredients (comma-separated)" />
-
-            <EditText
-                android:id="@+id/etSteps"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:hint="Steps (comma-separated)" />
-
-            <EditText
-                android:id="@+id/etImageUrl"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_marginBottom="16dp"
-                android:hint="Image URL" />
+                android:background="@android:color/darker_gray"
+                android:contentDescription="Recipe Image Preview"
+                android:scaleType="centerInside" />
 
-            <Button
-                android:id="@+id/btnSubmit"
+            <!-- Recipe Title -->
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Add Recipe" />
+                android:background="@drawable/bg_input_block"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recipe Title"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/etTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvTitle"
+                    android:hint="e.g. Classic Spaghetti Bolognese"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <!-- Description -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_input_block"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/tvDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/etDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvDescription"
+                    android:hint="e.g. A hearty Italian pasta dish with rich meat sauce"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <!-- Category -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_input_block"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/tvCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/spinnerCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvCategory" />
+            </RelativeLayout>
+
+            <!-- Ingredients -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_input_block"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/tvIngredients"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ingredients"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/etIngredients"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvIngredients"
+                    android:hint="e.g. Spaghetti, ground beef, tomato sauce, garlic"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <!-- Steps -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_input_block"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/tvSteps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Steps"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/etSteps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvSteps"
+                    android:hint="e.g. Boil pasta, cook beef, mix with sauce, serve"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <!-- Image URL -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_input_block"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/tvImageUrl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Image URL"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/etImageUrl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvImageUrl"
+                    android:hint="e.g. https://example.com/image.jpg"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
-

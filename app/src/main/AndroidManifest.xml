@@ -38,6 +38,30 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+        <!-- FCM Messaging Service -->
+<!--     /*   <service-->
+<!--            android:name="com.example.recipeapp.ui.notifications.MyFirebaseMessagingService"-->
+<!--            android:exported="false">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.google.firebase.MESSAGING_EVENT" />-->
+<!--            </intent-filter>-->
+<!--        </service>-->
+
+
+<!--        &lt;!&ndash; Default notification icon and color &ndash;&gt;-->
+<!--        <meta-data-->
+<!--            android:name="com.google.firebase.messaging.default_notification_icon"-->
+<!--            android:resource="@drawable/ic_user" />-->
+<!--        <meta-data-->
+<!--            android:name="com.google.firebase.messaging.default_notification_color"-->
+<!--            android:resource="@color/common_google_signin_btn_text_light" />-->
+
+<!--        <meta-data-->
+<!--            android:name="preloaded_fonts"-->
+<!--            android:resource="@array/preloaded_fonts" />-->
+<!--        */-->
     </application>
+
 
 </manifest>

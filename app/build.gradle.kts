@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.androidx.cardview)
     implementation(libs.androidx.runtime.android)
     implementation(libs.androidx.ui.unit.android)
+    implementation(libs.firebase.messaging)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
