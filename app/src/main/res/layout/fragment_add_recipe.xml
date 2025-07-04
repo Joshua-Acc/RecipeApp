@@ -14,13 +14,11 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="5dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:drawableRight="@drawable/ic_close"
         android:focusable="true"
         android:padding="4dp"
         android:text="Close"
-        android:textColor="@android:color/black"
         android:textSize="12sp"
         tools:background="@android:color/darker_gray" />
 
