@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.recipeapp.ui.UiHelper.handleBackPressWithAuthCheck
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,6 +23,14 @@ class LoginActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    /*    FirebaseMessaging.getInstance().subscribeToTopic("all")
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("FCM", "Subscribed to topic: all")
+                } else {
+                    Log.e("FCM", "Subscription failed", task.exception)
+                }
+            }*/
 
         handleBackPressWithAuthCheck()
     }

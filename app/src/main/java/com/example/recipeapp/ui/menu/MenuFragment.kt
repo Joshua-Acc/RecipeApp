@@ -62,6 +62,7 @@ class MenuFragment : Fragment() {
             Log.d("recipeToEdit", recipeToEdit?.id.toString() )
         }
         loadCategories()
+        setupCategorySpinner()
         initializeRecyclerview()
         setupSearchListener()
         loadRecipes()
@@ -92,7 +93,31 @@ class MenuFragment : Fragment() {
         }
     }
 //
-private fun updateExistingRecipe() {
+private fun setupCategorySpinner() {
+    val spinner = binding.categorySpinner
+    val allCategories = mutableListOf("All")
+    val categoryList: List<Category> = UniversalPreferences.loadList(requireContext(), "categories")
+    allCategories.addAll(categoryList.firstOrNull()?.categoryList ?: emptyList())
+
+    val adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, allCategories)
+    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+
+
+    spinner.adapter = adapter
+
+    spinner.setSelection(0) // default to "All"
+
+    spinner.setOnItemSelectedListener(object : android.widget.AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: android.widget.AdapterView<*>, view: View?, position: Int, id: Long) {
+            filterRecipes()
+        }
+
+        override fun onNothingSelected(parent: android.widget.AdapterView<*>) {}
+    })
+}
+
+
+    private fun updateExistingRecipe() {
     val categoryList: List<Category> = UniversalPreferences.loadList(requireContext(), "categories")
     recipeToEdit?.let { recipe ->
         showRecipeDialog(
@@ -192,14 +217,23 @@ private fun insertNewRecipe() {
 
 
     private fun setupSearchListener() {
-        val searchEditText = binding.searchEditText
-        searchEditText.addTextChangedListener { text ->
-            val filteredList = recipeList.filter {
-                it.title.contains(text.toString(), ignoreCase = true)
-            }
-            recipeAdapter.updateList(filteredList)
+        binding.searchEditText.addTextChangedListener {
+            filterRecipes()
         }
     }
+    private fun filterRecipes() {
+        val query = binding.searchEditText.text.toString().trim()
+        val selectedCategory = binding.categorySpinner.selectedItem?.toString() ?: "All"
+
+        val filtered = recipeList.filter {
+            val matchesCategory = selectedCategory == "All" || it.category.equals(selectedCategory, ignoreCase = true)
+            val matchesQuery = it.title.contains(query, ignoreCase = true)
+            matchesCategory && matchesQuery
+        }
+
+        updateRecipeList(filtered)
+    }
+
 
     private fun updateRecipeList(displayList: List<Recipe>) {
         recipeAdapter.updateList(displayList)
