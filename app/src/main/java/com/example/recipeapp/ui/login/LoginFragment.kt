@@ -250,7 +250,7 @@ class LoginFragment : Fragment() {
                             PrefsHelper.uid = uid.toString()
                             PrefsHelper.username = name.toString()
                             PrefsHelper.email = email.toString()
-                            PrefsHelper.isLoggedIn = true
+                            PrefsHelper.isLoggedIn = !btnDisabled
 
                             Log.d("loginDetail:", uid.toString() +","+ name.toString()+ "," + email.toString() )
                             val loggedInUserView1 = LoggedInUserView(displayName = name.toString())
