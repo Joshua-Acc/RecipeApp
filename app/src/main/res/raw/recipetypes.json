@@ -1,0 +1,13 @@
+{
+  "RecipeTypes": [
+    { "name": "Appetizer" },
+    { "name": "Dessert" },
+    { "name": "Beverage" },
+    { "name": "Pasta" },
+    { "name": "Salad" },
+    { "name": "Soup" },
+    { "name": "Snack" },
+    { "name": "Breakfast" },
+    { "name": "Others" }
+  ]
+}

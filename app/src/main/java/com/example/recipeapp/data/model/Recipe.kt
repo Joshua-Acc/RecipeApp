@@ -9,5 +9,6 @@ data class Recipe(
     val category: String = "",            // Recipe category (e.g. "Dessert", "Main")
     val imageUrl: String? = null,         // Optional URL to a recipe image
     val timestamp: Long = System.currentTimeMillis(), // For sorting/filtering
-    val createdBy: String? = null         // UserID or email who created it (optional)
+    val createdBy: String? = null  ,       // UserID or email who created it (optional)
+    val isDraft: Boolean = false
 )

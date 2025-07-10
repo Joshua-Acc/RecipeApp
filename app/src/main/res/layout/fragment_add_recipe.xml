@@ -22,25 +22,48 @@
         android:textSize="12sp"
         tools:background="@android:color/darker_gray" />
 
-    <Button
-        android:id="@+id/btnSubmit"
+    <LinearLayout
+        android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="16dp"
-        android:text="Add Recipe"
-        android:textSize="14sp" />
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:text="Add Recipe"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnSaveDraft"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="?android:attr/textColorTertiary"
+            android:text="Save As Draft"
+            android:textSize="14sp" />
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/formScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/btnSubmit"
+        android:layout_above="@id/buttonLayout"
         android:layout_below="@id/btnClose"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="7dp"
+        android:layout_marginBottom="8dp"
         android:clipToPadding="false"
         android:elevation="4dp"
         android:padding="8dp"

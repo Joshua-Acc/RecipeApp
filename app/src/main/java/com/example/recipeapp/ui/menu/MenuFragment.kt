@@ -1,5 +1,6 @@
 package com.example.recipeapp.ui.menu
 
+import android.content.Context
 import com.example.recipeapp.R
 
 import android.os.Bundle
@@ -18,14 +19,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.example.recipeapp.FirebaseApiManager
 
 import com.example.recipeapp.databinding.FragmentMenuBinding
 import com.example.recipeapp.adapter.RecipeAdapter
+import com.example.recipeapp.data.dao.AppDatabase
+import com.example.recipeapp.data.dao.RecipeD
 import com.example.recipeapp.data.model.Category
 import com.example.recipeapp.data.model.Recipe
 import com.example.recipeapp.ui.UiHelper
@@ -34,12 +39,18 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONArray
+import org.json.JSONObject
 
 class MenuFragment : Fragment() {
 
     private lateinit var binding: FragmentMenuBinding
     private val recipeList = mutableListOf<Recipe>()
-    private val categoryList = mutableListOf<Category>()
+    private var categoryList = mutableListOf<Category>()
     private lateinit var recipeAdapter: RecipeAdapter
     private var recipeToEdit: Recipe? = null // 👈 declare it at class-level
     override fun onCreateView(
@@ -61,7 +72,9 @@ class MenuFragment : Fragment() {
             updateExistingRecipe()
             Log.d("recipeToEdit", recipeToEdit?.id.toString() )
         }
-        loadCategories()
+       // loadCategories()
+       categoryList = loadRecipeTypesFromAssets(requireContext()).map { Category(it.name) } // Convert from RecipeType to Category
+           .toMutableList()
         setupCategorySpinner()
         initializeRecyclerview()
         setupSearchListener()
@@ -86,23 +99,113 @@ class MenuFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_insert -> {
-                insertNewRecipe()
+                categoryFirstPicker()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 //
-private fun setupCategorySpinner() {
+private fun categoryFirstPicker(){
+    val categoryNames = categoryList.map { it.name }
+    AlertDialog.Builder(requireContext())
+        .setTitle("Choose Recipe Category")
+        .setItems(categoryNames.toTypedArray()) { _, selectedIndex ->
+            val selectedCategory = categoryNames[selectedIndex]
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                val sampleRecipe = getSampleRecipeForCategory(requireContext(), selectedCategory)
+                withContext(Dispatchers.Main) {
+                    insertNewRecipe(sampleRecipe)
+                }
+            }
+
+           // insertNewRecipe(sampleRecipe)
+        }
+        .setCancelable(true)
+        .show()
+}
+
+    suspend fun getSampleRecipeForCategory(context: Context, category: String): Recipe {
+        val db = Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            "recipes_db"
+        ).build()
+
+       // val recipeDao = db.recipeDao()
+        val inputStream = context.resources.openRawResource(R.raw.recipes) // OR from assets
+        val jsonStr = inputStream.bufferedReader().use { it.readText() }
+
+        val recipeList = mutableListOf<Recipe>()
+        val recipeListD = mutableListOf<RecipeD>()
+        val jsonObject = JSONObject(jsonStr)
+        val jsonArray = jsonObject.getJSONArray("Recipes")
+
+        for (i in 0 until jsonArray.length()) {
+            val item = jsonArray.getJSONObject(i)
+            val currentCategory = item.getString("category")
+
+            val title = item.optString("title")
+            val description = item.optString("description")
+            val imageUrl = item.optString("imageUrl")
+
+            val ingredientsJsonArray = item.optJSONArray("ingredients") ?: JSONArray()
+            val ingredients = (0 until ingredientsJsonArray.length()).map {
+                ingredientsJsonArray.getString(it)
+            }
+            val stepsJsonArray = item.optJSONArray("steps") ?: JSONArray()
+            val steps = (0 until stepsJsonArray.length()).map {
+                stepsJsonArray.getString(it)
+            }
+            //Dao
+//            val itemD = jsonArray.getJSONObject(i)
+//
+//            val categoryD = itemD.getString("category")
+//            val titleD = itemD.getString("title")
+//            val descriptionD = itemD.getString("description")
+//            val imageUrlD = itemD.getString("imageUrl")
+//
+//            val ingredientsD = itemD.getJSONArray("ingredients").let { arr ->
+//                List(arr.length()) { arr.getString(it) }
+//            }
+//            val stepsD = itemD.getJSONArray("steps").let {arr ->
+//            List(arr.length()) { arr.getString(it) }
+//        }
+//
+//            val recipe = RecipeD(
+//                category = categoryD,
+//                title = titleD,
+//                description = descriptionD,
+//                ingredients = ingredientsD,
+//                steps = stepsD,
+//                imageUrl = imageUrlD
+//            )
+
+            recipeList.add(Recipe(category = currentCategory, title = title, description = description, ingredients = ingredients, steps = steps, imageUrl = imageUrl, isDraft = true))
+           // recipeListD.add(recipe)
+
+        }
+
+     //   recipeDao.deleteAllRecipes()
+
+    //        recipeListD.find { it.category.equals(category, ignoreCase = true) }
+    //            ?.let { recipeDao.insertRecipe(it) }
+
+     //   Log.d("Dao_get", recipeDao.getRecipeByCategory(category).toString())
+
+        return recipeList.find { it.category.equals(category, ignoreCase = true) }
+            ?: Recipe(title = "Recipe not found", category = category, isDraft = true)
+    }
+
+
+    private fun setupCategorySpinner() {
     val spinner = binding.categorySpinner
     val allCategories = mutableListOf("All")
-    val categoryList: List<Category> = UniversalPreferences.loadList(requireContext(), "categories")
-    allCategories.addAll(categoryList.firstOrNull()?.categoryList ?: emptyList())
+  //  val categoryList: List<Category> = loadRecipeTypesFromAssets(requireContext())//UniversalPreferences.loadList(requireContext(), "categories")
+    allCategories.addAll(categoryList.map { it.name })
 
     val adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, allCategories)
     adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
-
-
     spinner.adapter = adapter
 
     spinner.setSelection(0) // default to "All"
@@ -118,12 +221,13 @@ private fun setupCategorySpinner() {
 
 
     private fun updateExistingRecipe() {
-    val categoryList: List<Category> = UniversalPreferences.loadList(requireContext(), "categories")
+   //val categoryList: List<Category> = loadRecipeTypesFromAssets(requireContext())//UniversalPreferences.loadList(requireContext(), "categories")
     recipeToEdit?.let { recipe ->
         showRecipeDialog(
             context = requireContext(),
-            categories = categoryList.first().categoryList,
+            categories = categoryList,
             initialRecipe = recipe,
+
             onConfirm = { updatedRecipe ->
 
                 val recipeId = updatedRecipe.id ?: recipe.id
@@ -143,17 +247,22 @@ private fun setupCategorySpinner() {
                         Log.e("Firebase", "Failed to update recipe", it.toException())
                     }
                 )
+            },
+            onReload = {
+                loadRecipes()
             }
         )
     } ?: Toast.makeText(requireContext(), "No recipe selected to edit.", Toast.LENGTH_SHORT).show()
 }
 
-private fun insertNewRecipe() {
-    val categoryList: List<Category> = UniversalPreferences.loadList(requireContext(), "categories")
+private fun insertNewRecipe( sampleRecipe : Recipe) {
+   // val categoryList: List<Category> = UniversalPreferences.loadList(requireContext(), "categories")
    // val nameList = categoryList.map { it.name } // convert to List<String>
     showRecipeDialog(
         context = requireContext(),
-        categories = categoryList.first().categoryList,
+        categories = categoryList,
+        initialRecipe = sampleRecipe,
+        new = true,
         onConfirm = { newRecipe ->
             FirebaseApiManager().insertByKey(
                 path = "Recipes",
@@ -167,6 +276,10 @@ private fun insertNewRecipe() {
                     Toast.makeText(requireContext(), "Error: ${it.message}", Toast.LENGTH_SHORT).show()
                 })
 
+        },
+        onReload = {
+
+            loadRecipes()
         }
     )
 }
@@ -183,32 +296,51 @@ private fun insertNewRecipe() {
                 val removed = recipeList[position]
 
                 // Show confirmation BEFORE removing from list
-                UiHelper.showConfirmDialog(
-                    context = requireContext(),
-                    title = "Delete Recipe",
-                    message = "Are you sure you want to delete \"${removed.title}\"?",
-                    onConfirmed = {
-                        // Proceed with deletion
-                        recipeList.removeAt(position)
-                        recipeAdapter.notifyItemRemoved(position)
+                if (recipeList.isNotEmpty()) {
+                    UiHelper.showConfirmDialog(
+                        context = requireContext(),
+                        title = "Delete Recipe",
+                        message = "Are you sure you want to delete \"${removed.title}\"?",
+                        onConfirmed = {
+                            // Proceed with deletion
+                            recipeList.removeAt(position)
+                            recipeAdapter.notifyItemRemoved(position)
+                            if (removed.isDraft == false) {
+                                FirebaseApiManager().deleteByFieldValue(
+                                    path = "Recipes",
+                                    field = "id",
+                                    value = removed.id.toString(),
+                                    onSuccess = {
+                                        Log.d("Firebase", "Deleted $it recipe(s)")
+                                    },
+                                    onError = {
+                                        Log.e("Firebase", "Error deleting: ${it.message}")
+                                    }
+                                )
 
-                        FirebaseApiManager().deleteByFieldValue(
-                            path = "Recipes",
-                            field = "id",
-                            value = removed.id.toString(),
-                            onSuccess = {
-                                Log.d("Firebase", "Deleted $it recipe(s)")
-                            },
-                            onError = {
-                                Log.e("Firebase", "Error deleting: ${it.message}")
+                            } else {
+                                val db = Room.databaseBuilder(
+                                    requireContext(),
+                                    AppDatabase::class.java,
+                                    "recipes_db"
+                                ).build()
+
+                                val recipeDao = db.recipeDao()
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    withContext(Dispatchers.Main) {
+                                        recipeDao.deleteAllRecipes()
+                                    }
+                                }
+                                loadRecipes()
                             }
-                        )
-                    },
-                    onCancelled = {
-                        // Restore the item visually if the user cancels
-                        recipeAdapter.notifyItemChanged(position)
-                    }
-                )
+
+                        },
+                        onCancelled = {
+                            // Restore the item visually if the user cancels
+                            recipeAdapter.notifyItemChanged(position)
+                        }
+                    )
+                }
             }
         }
 
@@ -253,7 +385,7 @@ private fun insertNewRecipe() {
         binding.recyclerViewList.adapter = recipeAdapter
         binding.recyclerViewList.visibility = View.GONE
     }
-
+/*
     private fun loadRecipes() {
         FirebaseApiManager().loadListFromFirebase<Recipe>(
             dbPath = "Recipes",
@@ -263,6 +395,65 @@ private fun insertNewRecipe() {
                 Log.d("Firebase", "Loaded recipes: $loadedRecipes")
                 binding.loadingProgress.visibility =View.GONE
                 updateRecipeList(recipeList)
+            },
+            onError = { error ->
+                Log.e("Firebase", "Failed to load recipes: ${error.message}")
+            }
+        )
+
+    }*/
+
+    private fun loadRecipes() {
+
+        FirebaseApiManager().loadListFromFirebase<Recipe>(
+            dbPath = "Recipes",
+            onLoaded = { loadedRecipes ->
+                recipeList.clear()
+                recipeList.addAll(loadedRecipes)
+               try {
+
+                   val db = Room.databaseBuilder(
+                       requireContext(),
+                       AppDatabase::class.java,
+                       "recipes_db"
+                   ).build()
+
+                   val recipeDao = db.recipeDao()
+                   CoroutineScope(Dispatchers.IO).launch {
+
+                       val roomRecipes = recipeDao.getAllRecipes().toList() // this fetches from Room
+
+                       withContext(Dispatchers.Main) {
+                           // recipeList.clear()
+                           if (roomRecipes.isNotEmpty()) {
+                               val roomDrafts = roomRecipes.map { item ->
+                                   Recipe(
+                                       id = item.id.toString(),
+                                       category = item.category,
+                                       title = item.title,
+                                       description = item.description,
+                                       ingredients = item.ingredients,
+                                       steps = item.steps,
+                                       imageUrl = item.imageUrl,
+                                       isDraft = true
+                                   )
+                               }
+                               recipeList.addAll(roomDrafts)
+                               Log.d("Firebase", "Loaded Room drafts: $roomDrafts")
+
+                          } else {
+                               Log.w("RecipeList", "No recipes found in database")
+                               // Maybe show a UI message or fallback content
+                           }
+
+                   binding.loadingProgress.visibility = View.GONE
+                    updateRecipeList(recipeList)
+                   Log.d("recipe_list", "Loaded recipes: $recipeList")
+                       }
+                   }
+               }catch (ex: Exception){
+                   Log.d("dao_loadFailed", ex.toString())
+               }
             },
             onError = { error ->
                 Log.e("Firebase", "Failed to load recipes: ${error.message}")
@@ -289,6 +480,22 @@ private fun insertNewRecipe() {
                 Log.e("Firebase", "Failed to load categories: ${error.message}")
             }
         )
+    }
+    fun loadRecipeTypesFromAssets(context: Context): List<Category> {
+        val inputStream = context.resources.openRawResource(R.raw.recipetypes)
+        val jsonStr = inputStream.bufferedReader().use { it.readText() }
+        //val jsonStr = context.assets.open("recipetypes.json").bufferedReader().use { it.readText() }
+        val recipeTypes = mutableListOf<Category>()
+
+        val jsonObject = JSONObject(jsonStr)
+        val jsonArray = jsonObject.getJSONArray("RecipeTypes")
+
+        for (i in 0 until jsonArray.length()) {
+            val item = jsonArray.getJSONObject(i)
+            recipeTypes.add(Category(name = item.getString("name")))
+        }
+        Log.d("recipeType.json", recipeTypes.toString())
+        return recipeTypes
     }
 
 }

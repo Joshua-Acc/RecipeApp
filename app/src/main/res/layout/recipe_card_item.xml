@@ -8,10 +8,11 @@
     app:cardElevation="6dp">
 
     <LinearLayout
+        android:id="@+id/cardLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="@drawable/bg_recipe_gradient"
+        android:orientation="horizontal"
         android:padding="12dp">
 
         <ImageView
@@ -34,29 +35,29 @@
                 android:id="@+id/recipe_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Spaghetti Carbonara"
-                android:textStyle="bold"
-                android:textSize="18sp"
+                android:ellipsize="end"
                 android:maxLines="1"
-                android:ellipsize="end" />
+                android:text="Spaghetti Carbonara"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/recipe_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Pasta"
-                android:textSize="14sp"
-                android:textColor="#607D8B" />
+                android:textColor="#607D8B"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/recipe_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:text="Creamy pasta with egg, cheese, and bacon..."
                 android:textColor="#555555"
-                android:textSize="14sp"
-                android:maxLines="2"
-                android:ellipsize="end" />
+                android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

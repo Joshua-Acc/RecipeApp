@@ -54,7 +54,8 @@ class FragmentAddRecipe : Fragment() {
                 imageUrl = imageUrl,
                 ingredients = ingredients,
                 steps = steps,
-                title = title
+                title = title,
+                isDraft = false
             )
 
             val recipeRef = FirebaseDatabase.getInstance()

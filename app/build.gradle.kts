@@ -2,7 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
-   // alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.kapt)
+
+
 }
 
 android {
@@ -88,6 +90,10 @@ dependencies {
    // implementation("com.github.bumptech.glide:glide:4.16.0")         // ← duplicate
    // kapt("com.github.bumptech.glide:compiler:4.16.0")                 // ← duplicate
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation ("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+// For Kotlin Coroutines support
+    implementation ("androidx.room:room-ktx:2.6.1")
 
 
 

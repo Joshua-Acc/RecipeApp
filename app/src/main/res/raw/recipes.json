@@ -1,0 +1,169 @@
+{
+  "Recipes": [
+    {
+      "category": "Appetizer",
+      "title": "Bruschetta",
+      "description": "Grilled bread topped with tomato, garlic, and basil.",
+      "ingredients": [
+        "Baguette",
+        "Tomatoes",
+        "Garlic",
+        "Basil",
+        "Olive oil"
+      ],
+      "steps": [
+        "Toast bread",
+        "Mix toppings",
+        "Assemble bruschetta"
+      ],
+      "imageUrl": "https://bing.com/th?id=OSK.ab0bca62267032c576825d6fa814939c"
+    },
+    {
+      "category": "Dessert",
+      "title": "Chocolate Lava Cake",
+      "description": "Molten chocolate center wrapped in a rich cake shell.",
+      "ingredients": [
+        "Dark chocolate",
+        "Butter",
+        "Sugar",
+        "Eggs",
+        "Flour"
+      ],
+      "steps": [
+        "Melt chocolate",
+        "Mix batter",
+        "Bake",
+        "Serve warm"
+      ],
+      "imageUrl": "https://bing.com/th?id=OSK.0c8f6b0a84de6d16ac2ca3af17d43441"
+    },
+    {
+      "category": "Beverage",
+      "title": "Mango Lassi",
+      "description": "Creamy and refreshing mango yogurt drink.",
+      "ingredients": [
+        "Mango",
+        "Yogurt",
+        "Milk",
+        "Sugar",
+        "Cardamom"
+      ],
+      "steps": [
+        "Blend all ingredients",
+        "Chill",
+        "Serve cold"
+      ],
+      "imageUrl": "https://i0.wp.com/zheelicious.com/wp-content/uploads/2020/08/IMG_1816_Original.jpg?resize=683%2C1024&ssl=1"
+    },
+    {
+      "category": "Pasta",
+      "title": "Penne Arrabbiata",
+      "description": "Spicy tomato-based pasta with garlic and chili.",
+      "ingredients": [
+        "Penne",
+        "Tomato",
+        "Garlic",
+        "Chili flakes",
+        "Parsley"
+      ],
+      "steps": [
+        "Cook pasta",
+        "Prepare sauce",
+        "Combine and serve"
+      ],
+      "imageUrl": "https://bing.com/th?id=OSK.00e55236f68107e6af3ddece6ff5d77c"
+    },
+    {
+      "category": "Salad",
+      "title": "Caprese Salad",
+      "description": "Simple Italian salad with tomato, mozzarella, and basil.",
+      "ingredients": [
+        "Tomatoes",
+        "Mozzarella",
+        "Basil",
+        "Olive oil",
+        "Salt"
+      ],
+      "steps": [
+        "Slice ingredients",
+        "Layer on plate",
+        "Drizzle oil"
+      ],
+      "imageUrl": "https://bing.com/th?id=OSK.c855708017481c8dad701f4e23fdf5db"
+    },
+    {
+      "category": "Soup",
+      "title": "Tom Yum",
+      "description": "Thai hot and sour soup with shrimp.",
+      "ingredients": [
+        "Shrimp",
+        "Lemongrass",
+        "Kaffir lime leaves",
+        "Chili",
+        "Fish sauce"
+      ],
+      "steps": [
+        "Boil broth",
+        "Add ingredients",
+        "Simmer and serve"
+      ],
+      "imageUrl": "https://tse1.mm.bing.net/th/id/OIP.3IBt3JbSRnxffhu6RqzG_gHaLH?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+    },
+    {
+      "category": "Snack",
+      "title": "Guacamole with Chips",
+      "description": "Creamy avocado dip served with crispy tortilla chips.",
+      "ingredients": [
+        "Avocados",
+        "Lime",
+        "Onion",
+        "Tomato",
+        "Tortilla chips"
+      ],
+      "steps": [
+        "Mash avocado",
+        "Mix in ingredients",
+        "Serve with chips"
+      ],
+      "imageUrl": "https://bing.com/th?id=OSK.599e39119a91e002085ee0e0782fc2e0"
+    },
+    {
+      "category": "Breakfast",
+      "title": "Avocado Toast",
+      "description": "Mashed avocado on toasted sourdough with a poached egg.",
+      "ingredients": [
+        "Bread",
+        "Avocado",
+        "Egg",
+        "Salt",
+        "Pepper"
+      ],
+      "steps": [
+        "Toast bread",
+        "Mash avocado",
+        "Poach egg",
+        "Assemble"
+      ],
+      "imageUrl": "https://bing.com/th?id=OSK.b6ef3beee8e6d3fd6be902a6cab4b3eb"
+    },
+    {
+      "category": "Others",
+      "title": "Veggie Stir-Fry",
+      "description": "Quick sauté of mixed vegetables in soy-ginger sauce.",
+      "ingredients": [
+        "Broccoli",
+        "Bell pepper",
+        "Carrots",
+        "Soy sauce",
+        "Ginger"
+      ],
+      "steps": [
+        "Chop veggies",
+        "Stir-fry",
+        "Add sauce",
+        "Serve hot"
+      ],
+      "imageUrl": "https://bing.com/th?id=OSK.f4d4fa0747ece9d389d6130b5f16a02f"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 package com.example.recipeapp.ui
 
 
+import androidx.lifecycle.lifecycleScope
 
 import android.content.Context
 import android.graphics.Color
@@ -20,10 +21,21 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.example.recipeapp.R
+import com.example.recipeapp.data.dao.AppDatabase
+import com.example.recipeapp.data.dao.RecipeD
+import com.example.recipeapp.data.model.Category
 import com.example.recipeapp.data.model.Recipe
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.UUID
 
 
@@ -79,10 +91,18 @@ object UiHelper {
 
     fun showRecipeDialog(
         context: Context,
-        categories: List<String>,
+        categories: List<Category>,
         initialRecipe: Recipe? = null,
-        onConfirm: (Recipe) -> Unit
+        new: Boolean? = false,
+        onConfirm: (Recipe) -> Unit,
+        onReload : () -> Unit
     ) {
+        val db = Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            "recipes_db"
+        ).build()
+
         val dialogView = LayoutInflater.from(context).inflate(R.layout.fragment_add_recipe, null)
 
         val etTitle = dialogView.findViewById<EditText>(R.id.etTitle)
@@ -92,26 +112,29 @@ object UiHelper {
         val etImageUrl = dialogView.findViewById<EditText>(R.id.etImageUrl)
         val spinnerCategory = dialogView.findViewById<Spinner>(R.id.spinnerCategory)
         val btnSubmit = dialogView.findViewById<Button>(R.id.btnSubmit)
+        val btnDraft = dialogView.findViewById<Button>(R.id.btnSaveDraft)
         val btnClose = dialogView.findViewById<Button>(R.id.btnClose)
+        val categoryNames = categories.map { it.name }
         val imagePreview = dialogView.findViewById<ImageView>(R.id.imagePreview)
         var id = ""
-        val title = etTitle.text.toString()
-        val firstChar = title.firstOrNull()?.toString() ?: "X"
-         id = firstChar + UUID.randomUUID().toString()
 
-        val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, categories)
+
+
+        val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, categoryNames)
         spinnerCategory.adapter = adapter
-
+        btnDraft.isVisible = initialRecipe?.isDraft == true
         initialRecipe?.let { recipe ->
             etTitle.setText(recipe.title)
             etDescription.setText(recipe.description)
             etIngredients.setText(recipe.ingredients.joinToString(", "))
             etSteps.setText(recipe.steps.joinToString(", "))
             etImageUrl.setText(recipe.imageUrl ?: "")
-            val index = categories.indexOf(recipe.category)
-            if (index >= 0) spinnerCategory.setSelection(index)
-            btnSubmit.text = "Update"
-            id = initialRecipe.id.toString()
+            val selectedIndex = categoryNames.indexOf(recipe.category)
+            if (selectedIndex >= 0) spinnerCategory.setSelection(selectedIndex)
+            btnSubmit.text = if (initialRecipe.isDraft == false)"Update" else "Add"
+            val title = etTitle.text.toString()
+            val firstChar = title.firstOrNull()?.toString() ?: "X"
+            id =  if(new != true) initialRecipe.id.toString() else firstChar + UUID.randomUUID().toString()
         }
 
         val dialog = AlertDialog.Builder(context)
@@ -129,12 +152,46 @@ object UiHelper {
                 category = spinnerCategory.selectedItem.toString(),
                 imageUrl = etImageUrl.text.toString(),
                 createdBy = initialRecipe?.createdBy,
-                timestamp = initialRecipe?.timestamp ?: System.currentTimeMillis()
+                timestamp = initialRecipe?.timestamp ?: System.currentTimeMillis(),
+                isDraft = false
             )
-
+            if(initialRecipe?.isDraft == true){
+                val recipeDao = db.recipeDao()
+                GlobalScope.launch(Dispatchers.IO) {
+                    recipeDao.deleteAllRecipes()
+                    withContext(Dispatchers.Main) {
+                        onReload() // ✅ Trigger refresh after saving draft
+                        dialog.dismiss()
+                    }
+                }
+            }
             onConfirm(recipe)
             dialog.dismiss()
         }
+
+        btnDraft.setOnClickListener {
+            val recipe = RecipeD(
+                id = 0 ,
+                title = etTitle.text.toString(),
+                description = etDescription.text.toString(),
+                ingredients = etIngredients.text.toString().split(',').map { it.trim() },
+                steps = etSteps.text.toString().split(',').map { it.trim() },
+                category = spinnerCategory.selectedItem.toString(),
+                imageUrl = etImageUrl.text.toString()
+            )
+            val recipeDao = db.recipeDao()
+            GlobalScope.launch(Dispatchers.IO) {
+                recipeDao.deleteAllRecipes()
+                recipeDao.insertRecipe(recipe)
+
+                withContext(Dispatchers.Main) {
+                    onReload() // ✅ Trigger refresh after saving draft
+                    dialog.dismiss()
+                }
+            }
+        }
+
+
 
         val url = etImageUrl.text.toString().trim { it <= ' ' }
         if (!url.isEmpty()) {
