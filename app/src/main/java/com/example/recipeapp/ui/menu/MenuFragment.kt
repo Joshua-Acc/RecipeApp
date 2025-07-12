@@ -49,7 +49,7 @@ import org.json.JSONObject
 class MenuFragment : Fragment() {
 
     private lateinit var binding: FragmentMenuBinding
-    private val recipeList = mutableListOf<Recipe>()
+    private var recipeList = mutableListOf<Recipe>()
     private var categoryList = mutableListOf<Category>()
     private lateinit var recipeAdapter: RecipeAdapter
     private var recipeToEdit: Recipe? = null // 👈 declare it at class-level
@@ -65,20 +65,18 @@ class MenuFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        loadRecipes()
        // recipeAdapter = RecipeAdapter(requireContext(), recipeList.toMutableList())
-
+        categoryList = loadRecipeTypesFromAssets(requireContext()).map { Category(it.name) } // Convert from RecipeType to Category
+            .toMutableList()
         recipeAdapter = RecipeAdapter(requireContext(), recipeList.toMutableList()) { selectedRecipe ->
             recipeToEdit = selectedRecipe
             updateExistingRecipe()
             Log.d("recipeToEdit", recipeToEdit?.id.toString() )
         }
-       // loadCategories()
-       categoryList = loadRecipeTypesFromAssets(requireContext()).map { Category(it.name) } // Convert from RecipeType to Category
-           .toMutableList()
         setupCategorySpinner()
         initializeRecyclerview()
         setupSearchListener()
-        loadRecipes()
         setupSwipeToDelete()
     }
 
@@ -137,7 +135,7 @@ private fun categoryFirstPicker(){
         val jsonStr = inputStream.bufferedReader().use { it.readText() }
 
         val recipeList = mutableListOf<Recipe>()
-        val recipeListD = mutableListOf<RecipeD>()
+       // val recipeListD = mutableListOf<RecipeD>()
         val jsonObject = JSONObject(jsonStr)
         val jsonArray = jsonObject.getJSONArray("Recipes")
 
@@ -249,7 +247,7 @@ private fun categoryFirstPicker(){
                 )
             },
             onReload = {
-                loadRecipes()
+              //  loadRecipes()
             }
         )
     } ?: Toast.makeText(requireContext(), "No recipe selected to edit.", Toast.LENGTH_SHORT).show()
@@ -270,7 +268,7 @@ private fun insertNewRecipe( sampleRecipe : Recipe) {
                 data = newRecipe,
                 onSuccess = {
                     Toast.makeText(requireContext(), "Recipe added!", Toast.LENGTH_SHORT).show()
-                     loadRecipes()
+
                 },
                 onError = {
                     Toast.makeText(requireContext(), "Error: ${it.message}", Toast.LENGTH_SHORT).show()
@@ -278,7 +276,6 @@ private fun insertNewRecipe( sampleRecipe : Recipe) {
 
         },
         onReload = {
-
             loadRecipes()
         }
     )
@@ -409,7 +406,7 @@ private fun insertNewRecipe( sampleRecipe : Recipe) {
             dbPath = "Recipes",
             onLoaded = { loadedRecipes ->
                 recipeList.clear()
-                recipeList.addAll(loadedRecipes)
+                recipeList = loadedRecipes.toMutableList()
                try {
 
                    val db = Room.databaseBuilder(
@@ -426,29 +423,39 @@ private fun insertNewRecipe( sampleRecipe : Recipe) {
                        withContext(Dispatchers.Main) {
                            // recipeList.clear()
                            if (roomRecipes.isNotEmpty()) {
-                               val roomDrafts = roomRecipes.map { item ->
+                               val roomDrafts = roomRecipes
+                                   .map { item ->
                                    Recipe(
                                        id = item.id.toString(),
                                        category = item.category,
                                        title = item.title,
                                        description = item.description,
                                        ingredients = item.ingredients,
+                                       timestamp = 0,
                                        steps = item.steps,
                                        imageUrl = item.imageUrl,
                                        isDraft = true
                                    )
+
                                }
-                               recipeList.addAll(roomDrafts)
-                               Log.d("Firebase", "Loaded Room drafts: $roomDrafts")
+                               roomDrafts.forEach { item ->
+                                   val exists = recipeList.any { it.id == item.id }
+                                   if (!exists) {
+                                       recipeList.add(item)
+                                   }
+                               }
+
+
+                               Log.d("RecipeDao+Firebase", "Loaded Room drafts: $recipeList , ${recipeList.count()}")
 
                           } else {
                                Log.w("RecipeList", "No recipes found in database")
                                // Maybe show a UI message or fallback content
                            }
 
-                   binding.loadingProgress.visibility = View.GONE
-                    updateRecipeList(recipeList)
-                   Log.d("recipe_list", "Loaded recipes: $recipeList")
+                    updateRecipeList(recipeList.distinctBy { it.id })
+                    binding.loadingProgress.visibility = View.GONE
+                   Log.d("recipe_list", "Loaded recipes:${recipeList.count()}")
                        }
                    }
                }catch (ex: Exception){

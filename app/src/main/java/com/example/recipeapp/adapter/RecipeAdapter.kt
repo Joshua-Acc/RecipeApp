@@ -56,7 +56,7 @@ class RecipeAdapter(
 
     }
     fun updateList(newList: List<Recipe>) {
-        recipeList = newList.toMutableList()
+        recipeList = newList.distinctBy { it.id }
         notifyDataSetChanged()
     }
 

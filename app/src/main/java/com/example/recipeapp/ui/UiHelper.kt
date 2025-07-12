@@ -153,9 +153,9 @@ object UiHelper {
                 imageUrl = etImageUrl.text.toString(),
                 createdBy = initialRecipe?.createdBy,
                 timestamp = initialRecipe?.timestamp ?: System.currentTimeMillis(),
-                isDraft = false
+                isDraft = initialRecipe?.isDraft ?: false
             )
-            if(initialRecipe?.isDraft == true){
+            if(recipe.isDraft == true){
                 val recipeDao = db.recipeDao()
                 GlobalScope.launch(Dispatchers.IO) {
                     recipeDao.deleteAllRecipes()
@@ -190,8 +190,6 @@ object UiHelper {
                 }
             }
         }
-
-
 
         val url = etImageUrl.text.toString().trim { it <= ' ' }
         if (!url.isEmpty()) {
